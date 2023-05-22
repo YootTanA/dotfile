@@ -1,0 +1,36 @@
+#!/bin/bash
+
+Time(){
+  TIME=$(date "+%H:%M:%S")
+  echo -e -n "${TIME}"
+}
+
+Date(){
+  DATE=$(date "+%a, %m %B %Y")
+  echo -e -n "${DATE}"
+}
+
+Battery(){
+  #BATTERY_PERT=$(acpitool -B | grep Remaining | awk '{ print $6+0 }')
+  BATTERY_PERT=$(cat /sys/class/power_supply/BAT0/capacity)
+  STATUS=$(cat /sys/class/power_supply/BAT0/status)
+  echo -e -n "$STATUS: ${BATTERY_PERT}%"
+}
+
+VPNCheck(){
+   #VPN_CHECK=$(ps -a | grep openvpn | awk '{ print $4}')
+   echo -e -n $(cat $HOME/.config/ovpn/scripts/env)
+}
+
+KubeCurrentContext(){
+  echo -e -n $(kubectl config get-contexts | grep '\*' | awk  '{ print $2 }')
+}
+
+KernelMode(){
+  echo -e -n $(cat /sys/firmware/acpi/platform_profile)
+}
+
+while true; do 
+  echo -e " "%{l}"  "%{c}$(VPNCheck)" | $(KubeCurrentContext) "%{r}$(Battery)" |  $(Date) | $(Time)"
+  sleep 0.1s
+done
