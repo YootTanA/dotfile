@@ -1,0 +1,24 @@
+import:
+ - ~/.config/alacritty/themes/themes/nord.yaml
+
+window:
+   opacity: 0.2
+
+selection:
+  save_to_clipboard: true
+
+font:
+  normal:
+    family: Fira Mono
+    style: Regular
+  bold:
+    family: Fira Mono
+    style: Bold
+  italic:
+    family: Fira Mono
+    style: Italic
+  bold_italic:
+    family: Fira Mono 
+    style: Bold Italic
+  size: 18
+
