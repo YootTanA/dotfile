@@ -1,0 +1,7 @@
+#!/bin/bash
+
+color_bg="#171717"
+color_fg="#EEEEEE"
+color_hl1="#FF6000"
+color_hl2="#81a1c1"
+

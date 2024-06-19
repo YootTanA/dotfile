@@ -1,0 +1,37 @@
+super + Return
+	urxvtc
+
+super + @space
+	dmenu_run
+
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+super + w
+	bspc node -c
+
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+super + alt + Escape
+	pkill lemonbar 
+
+super + alt + {h,j,k,l}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+super + alt + shift + {h,j,k,l}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+super + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+XF86AudioLowerVolume
+	amixer set Master 5%-
+XF86AudioRaiseVolume
+	amixer set Master 5%+
+XF86AudioMute
+        amixer set Master toggle
+

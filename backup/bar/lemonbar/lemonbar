@@ -1,0 +1,126 @@
+#!/bin/bash
+
+FIFO=${XDG_RUNTIME_DIR:-/tmp}/lemonbar.FIFO
+
+cd $(dirname -- $0)
+
+. ./common
+. ./bspc
+
+trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
+
+[ -e "$FIFO" ] && rm "$FIFO"
+mkfifo "$FIFO"
+
+## DATE TIME
+while :; do
+    time=$(date "+%H:%M")
+    date=$(date "+%a %d %h")
+    datetime="$date $time"
+    
+    echo "DATE$datetime" > $FIFO
+    sleep 1;
+done &
+
+## BPSC
+while read -r line; do
+    echo "BSPC$(bspc_desktops)" > $FIFO
+done < <(bspc subscribe desktop) &
+echo "BSPC$(bspc_desktops)" > $FIFO &
+
+## Battery
+battery_icon="\uf244"
+while :; do
+    #pert=$(acpitool -B | grep Remaining | awk '{ print $6+0 }')
+    pert=$(cat /sys/class/power_supply/BAT0/capacity)
+    status=$(cat /sys/class/power_supply/BAT0/status)
+
+    # init battery_icon
+    if [[ "$status" == 'Discharging' ]] || [[ "$status" == 'Not charging' ]]; then 
+      if [ $pert -le 10 ]; then
+        battery_icon="\uf244"
+      elif [ $pert -gt 10 ] && [ $pert -lt 50 ]; then 
+        battery_icon="\uf243"
+      elif  [ $pert -ge 50 ] && [ $pert -le 70 ]; then 
+        battery_icon="\uf242"
+      elif [ $pert -ge 70 ] && [ $pert -lt 100 ]; then 
+        battery_icon="\uf241"
+      fi
+    fi
+
+    if [[ "$status" == 'Charging' ]]; then 
+        if [ $battery_icon == "\uf244" ]; then 
+          next="\uf243"
+        elif [ $battery_icon == "\uf243" ]; then
+          next="\uf242"
+        elif [ $battery_icon == "\uf242" ]; then
+          next="\uf241"
+        elif [ $battery_icon == "\uf241" ]; then
+          next="\uf240"
+        elif [ $battery_icon == "\uf240" ]; then
+          next="\uf244"
+        fi
+        battery_icon="$next"
+    fi
+    
+    if [[ "$pert" == '100' ]]; then 
+        battery_icon="\uf240"
+    fi
+
+    battery="$battery_icon${pert}%"
+
+    echo "BATT$battery" > $FIFO
+    sleep 1;
+done &
+
+## VPN
+# TODO: improve read from trigger event
+while :; do
+    vpn=$(cat $HOME/.config/ovpn/scripts/env)
+    
+    echo "VPN$vpn" > $FIFO
+    sleep 1;
+done &
+
+## Kube
+# TODO: improve read from trigger event
+while :; do
+    kube=$(kubectl config get-contexts | grep '\*' | awk  '{ print $2 }')
+    
+    echo "KUBE$kube" > $FIFO
+    sleep 1;
+done &
+
+## Lang
+while :; do
+    mask=$(xset -q | grep LED | awk '{ print $10 }')
+
+    if [ $mask == '00001000' ]; then 
+      lang="TH"
+    else
+      lang="EN"
+    fi
+
+    echo "LANG$lang" > $FIFO
+    sleep 1;
+done &
+
+wifi_icon="\uf1eb"
+while :; do
+   wifi_name=$(iwctl station wlan0 show | grep "Connected network" | awk  '{ print $3 }')
+   echo "WIFI$wifi_icon$wifi_name" > $FIFO
+   sleep 1;
+done &
+
+
+tail -f $FIFO | $(dirname -- $0)/bar | lemonbar \
+	-p \
+      -u 2 \
+	-g "x25+0+0" \
+	-B "${color_bg}" \
+	-U "#FFFFFF" \
+	-F "${color_fg}" \
+      -f "Source Code Pro:style=Regular:size=10" \
+      -f "Inconsolata Nerd Font:style=Regular:size=12" \
+
+
