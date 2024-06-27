@@ -1,0 +1,19 @@
+@theme "spotlight-dark"
+
+
+* {
+    font: "Courier Prime 25";
+}
+
+configuration {
+  dpi: 100;
+}
+
+entry {
+    font:   inherit;
+    placeholder         : "";
+}
+
+window {
+  transparency: "screenshot";
+}

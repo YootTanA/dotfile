@@ -1,0 +1,10 @@
+#!/bin/bash
+
+LAYOUT=$(setxkbmap -query | grep layout | awk '{print $2}')
+
+if [[ $LAYOUT == us* ]]; then
+  setxkbmap  -layout us,th -option grp:alt_shift_toggle
+elif [[ $LAYOUT == th* ]]; then
+  setxkbmap  -layout th,us -option grp:alt_shift_toggle
+fi
+

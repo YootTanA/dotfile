@@ -1,0 +1,28 @@
+#!/bin/bash
+
+cd $(dirname -- $0)
+
+. ./common
+
+while read -r line; do
+  case $line in 
+        WIFI*)
+          wifi_name="${line#????}"
+          ;;
+        DATE*)
+          datetime="${line#????}"       
+          ;;
+        BATT*)
+          battery="${line#????}"
+          ;;
+        BSPC*)
+          desktop="${line#????}"
+          ;;
+        LANG*)
+          layout="${line#????}"
+          ;;
+        *) ;;
+  esac
+
+  echo -e "%{l}${desktop}  %{r} ${wifi_name}  ${battery}  %{U${color_hl1}}%{+u}${layout}%{-u}%{U-}  ${datetime} "
+done

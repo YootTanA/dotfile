@@ -1,0 +1,25 @@
+#!/bin/bash
+
+. ./common
+
+bspc_desktops() {
+    all_desk=$(bspc query -D --names)
+    active_desk=$(bspc query -D -d .occupied --names)
+    focus_desk=$(bspc query -D -d focused --names)
+    buf=""
+
+
+    for d in ${all_desk[@]}; do
+        if [[ "${focus_desk}" == "${d}" ]]; then
+            buf="${buf}%{B${color_hl1}}%{F${color_hl2}} ${d} %{F-}%{B-}"
+        fi
+
+        for a in ${active_desk[@]}; do
+           if [ "${a}" == "${d}" ] && [ "${focus_desk}" != "${a}" ]; then
+              buf="${buf} ${d} "
+           fi
+        done
+    done
+
+    echo "${buf}"
+}

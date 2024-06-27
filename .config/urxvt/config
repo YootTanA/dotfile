@@ -1,0 +1,36 @@
+#include "./theme"
+
+URxvt.transparent: true
+#URxvt.blurRadius: 10
+URxvt.shading: 70
+
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.scrollBar_floating: false
+URxvt.scrollstyle: rxvt
+URxvt.geometry: 200x100
+
+URxvt.iso14755: False
+URxvt.font:xft:CourierPrime:style=Regular:size=20,xft:CourierPrime:style=Italic:size=20,xft:CourierPrime:style=Bold:size=20,xft:SymbolsNerdFont:style=Regular:size=20,xft:Kanit:style=Regular:size=35
+
+#URxvt.letterSpace: -5.5
+URxvt.lineSpace: 0
+
+
+URxvt.perl-lib: /usr/lib/urxvt/perl/
+URxvt.perl-ext-common: default,selection-to-clipboard,pasta,matcher,keyboard-select
+URxvt.keysym.Control-V: perl:pasta:paste
+#URxvt.keysym.Control-Meta-c: builtin-string:
+#URxvt.keysym.Control-Meta-v: builtin-string:
+#URxvt.clipboard.copycmd:  xclip -i -selection clipboard
+#URxvt.clipboard.pastecmd: xclip -o -selection clipboard
+#URxvt.keysym.M-C-V:   perl:clipboard:paste_escaped
+
+#URxvt.perl-ext-common: ...,clipboard
+#URxvt.keysym.M-c:   perl:clipboard:copy
+#URxvt.keysym.M-v:   perl:clipboard:paste
+#URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+
+URxvt.url-launcher:   /usr/bin/firefox-bin
+URxvt.underlineURLs:  False
+URxvt.matcher.button: 1 
